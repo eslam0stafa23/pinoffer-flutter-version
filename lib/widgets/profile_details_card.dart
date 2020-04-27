@@ -36,7 +36,7 @@ class ProfileDetails extends StatelessWidget {
                                 "Eslam Mostafa",
                                 style: TextStyle(
                                     fontSize: 18,
-                                    fontWeight: FontWeight.w800,
+                                    fontWeight: FontWeight.w500,
                                     color: Color(0xFF32343d)),
                               ),
                             ),
