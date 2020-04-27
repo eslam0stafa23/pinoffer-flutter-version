@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pinofferflutterapp/constants.dart';
 
 class BottomNavButton extends StatelessWidget {
   final Widget screen;
@@ -28,12 +29,12 @@ class BottomNavButton extends StatelessWidget {
         children: <Widget>[
           Icon(
             tabIcon,
-            color: currentTab == tabIndex ? Colors.blue : Colors.grey,
+            color: currentTab == tabIndex ? blueEnd : Colors.grey,
           ),
           Text(
             tabName,
             style: TextStyle(
-              color: currentTab == tabIndex ? Colors.blue : Colors.grey,
+              color: currentTab == tabIndex ? blueEnd : Colors.grey,
             ),
           ),
         ],
