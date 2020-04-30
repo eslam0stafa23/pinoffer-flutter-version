@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:pinofferflutterapp/widgets/bottom_nav_button.dart';
-import 'package:pinofferflutterapp/widgets/toggle_button.dart';
+import 'package:pinofferflutterapp/dummy_data.dart';
+import 'package:pinofferflutterapp/widgets/cuisine_types.dart';
+import 'package:pinofferflutterapp/widgets/restaurant_item.dart';
 
 import '../constants.dart';
 
@@ -13,6 +14,32 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   List<bool> _selections = List.generate(9, (_) => false);
+  int selectedCuisine;
+  bool notFirstLuanch = false;
+  var _selectedCuisineRestorants = dummyRestaurantsList;
+  void onCuisineSelected(int index, List<bool> selections) {
+    selectedCuisine = index;
+    notFirstLuanch = true;
+    if (index != 0) {
+      _selectedCuisineRestorants = dummyRestaurantsList.where((restaurant) {
+        return restaurant.cuisineType == selectedCuisine;
+      }).toList();
+    } else {
+      _selectedCuisineRestorants = dummyRestaurantsList;
+    }
+
+    setState(() {
+      for (int buttonIndex = 0;
+          buttonIndex < selections.length;
+          buttonIndex++) {
+        if (buttonIndex == index) {
+          selections[buttonIndex] = true;
+        } else {
+          selections[buttonIndex] = false;
+        }
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,16 +50,38 @@ class _HomeScreenState extends State<HomeScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Padding(
-            padding: EdgeInsets.all(15),
+            padding: const EdgeInsets.only(top: 12, left: 20, right: 20),
             child: SafeArea(
-              child: Text(
-                "Hey, Eslam!",
-                style: TextStyle(
-                    color: grayText,
-                    fontWeight: FontWeight.normal,
-                    fontSize: 16.0),
-                textAlign: TextAlign.start,
+              child: Row(
+                children: <Widget>[
+                  Icon(
+                    Icons.sort,
+                    size: 35,
+                    color: lightGrayText,
+                  ),
+                  Expanded(child: Container()),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(30),
+                    child: Image.asset(
+                      "assets/images/profile.jpeg",
+                      width: 45,
+                      height: 45,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ],
               ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.fromLTRB(15, 15, 15, 10),
+            child: Text(
+              "Hey, Eslam!",
+              style: TextStyle(
+                  color: grayText,
+                  fontWeight: FontWeight.normal,
+                  fontSize: 16.0),
+              textAlign: TextAlign.start,
             ),
           ),
           Padding(
@@ -40,76 +89,41 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Text(
               "What would you like to eat?",
               style: TextStyle(
-                  color: grayText, fontWeight: FontWeight.bold, fontSize: 50),
+                  color: grayText, fontWeight: FontWeight.bold, fontSize: 25),
               textAlign: TextAlign.start,
             ),
           ),
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
-            child: ToggleButtons(
-                borderWidth: 0.0,
-                borderColor: Colors.transparent,
-                focusColor: Colors.transparent,
-                color: Colors.transparent,
-                disabledColor: Colors.transparent,
-                fillColor: Colors.transparent,
-                highlightColor: Colors.transparent,
-                disabledBorderColor: Colors.transparent,
-                selectedBorderColor: Colors.transparent,
-                selectedColor: Colors.transparent,
-                splashColor: Colors.transparent,
-                isSelected: _selections,
-                onPressed: (int index) {
-                  setState(() {
-                    for (int buttonIndex = 0;
-                        buttonIndex < _selections.length;
-                        buttonIndex++) {
-                      if (buttonIndex == index) {
-                        _selections[buttonIndex] = true;
-                      } else {
-                        _selections[buttonIndex] = false;
-                      }
-                    }
-                  });
-                },
-                children: <Widget>[
-                  AppToggleButton(
-                      buttonText: "All",
-                      buttonIcon: Icons.fastfood,
-                      toggled: _selections.elementAt(0)),
-                  AppToggleButton(
-                      buttonText: "Italian",
-                      buttonIcon: Icons.local_pizza,
-                      toggled: _selections.elementAt(1)),
-                  AppToggleButton(
-                      buttonText: "Egyptian",
-                      buttonIcon: Icons.local_dining,
-                      toggled: _selections.elementAt(2)),
-                  AppToggleButton(
-                      buttonText: "Seafood",
-                      buttonIcon: Icons.local_bar,
-                      toggled: _selections.elementAt(3)),
-                  AppToggleButton(
-                      buttonText: "Asian",
-                      buttonIcon: Icons.local_cafe,
-                      toggled: _selections.elementAt(4)),
-                  AppToggleButton(
-                      buttonText: "Turkish",
-                      buttonIcon: Icons.local_cafe,
-                      toggled: _selections.elementAt(5)),
-                  AppToggleButton(
-                      buttonText: "Greek",
-                      buttonIcon: Icons.local_drink,
-                      toggled: _selections.elementAt(6)),
-                  AppToggleButton(
-                      buttonText: "French",
-                      buttonIcon: Icons.cake,
-                      toggled: _selections.elementAt(7)),
-                  AppToggleButton(
-                      buttonText: "Chinese",
-                      buttonIcon: Icons.restaurant,
-                      toggled: _selections.elementAt(8))
-                ]),
+            child: CuisinesList(
+              selections: _selections,
+              onPressed: onCuisineSelected,
+              notFirstLuanch: notFirstLuanch,
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.fromLTRB(20, 0, 20, 20),
+            child: Text(
+              "BEST IN YOUR AREA",
+              style: TextStyle(
+                  color: lightGrayText,
+                  fontWeight: FontWeight.w900,
+                  fontSize: 16.0),
+              textAlign: TextAlign.start,
+            ),
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: _selectedCuisineRestorants.length,
+              scrollDirection: Axis.horizontal,
+              itemBuilder: (context, index) {
+                return RestaurantItem(
+                  restaurantImage: _selectedCuisineRestorants[index].imageUrl,
+                  restaurantName: _selectedCuisineRestorants[index].name,
+                  rating: _selectedCuisineRestorants[index].rate,
+                );
+              },
+            ),
           )
         ],
       ),

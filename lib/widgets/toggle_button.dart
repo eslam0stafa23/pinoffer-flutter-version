@@ -15,7 +15,7 @@ class AppToggleButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.fromLTRB(15, 20, 15, 20),
       child: Column(
         children: <Widget>[
           Container(
@@ -28,20 +28,20 @@ class AppToggleButton extends StatelessWidget {
                 ),
               ),
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(24)),
+                  borderRadius: BorderRadius.all(Radius.circular(16)),
                   boxShadow: toggled
                       ? [
                           BoxShadow(
                               color: blueShadow,
                               offset: Offset(0, 5),
-                              blurRadius: 24,
+                              blurRadius: 16,
                               spreadRadius: 0)
                         ]
                       : [
                           BoxShadow(
                               color: lightGrayShadow,
                               offset: Offset(0, 5),
-                              blurRadius: 24,
+                              blurRadius: 16,
                               spreadRadius: 0)
                         ],
                   color: toggled ? blueEnd : Colors.white)),
